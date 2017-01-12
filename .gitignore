@@ -1,0 +1,14 @@
+**/*.dSYM
+**/*.exe
+**/*.ilk
+**/*.lib
+**/*.map
+**/*.o
+**/*.obj
+**/*.pdb
+**/*.stackdump
+**/*.sublime-*
+**/*.sym
+**/.DS_store
+**/.tmp.*
+**/build/**

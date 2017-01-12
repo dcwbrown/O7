@@ -1,0 +1,14 @@
+# Cygwin git and github for windows differ in their eol convention: Github for
+# windows uses crlf, but cygwin git uses LF.
+
+# Disable git text special cases so that git does not look for and change
+# end of lines.
+
+# Thus files will have the same end of lines on all platforms.
+* binary
+
+
+# Provide type information to improve block annotation in git diff output.
+*.Mod diff=pascal
+*.c   diff=cpp
+*.h   diff=cpp
