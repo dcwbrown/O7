@@ -1,6 +1,9 @@
-MODULE ORG; (* NW  18.4.2016 / 17.9.2016  code generator in Oberon-07 for RISC*)
+MODULE ORG; (* DCWB 2017-01-16 code generator in Oberon-07 for x86 32 bit
+               From ORG by NW  18.4.2016 / 17.9.2016  code generator in Oberon-07 for RISC*)
+
   IMPORT SYSTEM, Files, ORS, ORB;
-  (*Code generator for Oberon compiler for RISC processor.
+
+  (*Code generator for Oberon compiler for x86 processor 32 bit mode.
      Procedural interface to Parser OSAP; result in array "code".
      Procedure Close writes code-files*)
 
@@ -18,37 +21,44 @@ MODULE ORG; (* NW  18.4.2016 / 17.9.2016  code generator in Oberon-07 for RISC*)
     BR = 0; BLR = 1; BC = 2; BL = 3;
     MI = 0; PL = 8; EQ = 1; NE = 9; LT = 5; GE = 13; LE = 6; GT = 14;
 
-    TYPE Item* = RECORD
-      mode*: INTEGER;
-      type*: ORB.Type;
-      a*, b*, r: INTEGER;
-      rdo*: BOOLEAN  (*read only*)
+  TYPE
+    Item* = RECORD
+      mode*:  INTEGER; (* Const/Var/Par/Reg/RegI/Cond *)
+      type*:  ORB.Type;
+      a*, b*: INTEGER;
+      r:      INTEGER; (* Register number *)
+      rdo*:   BOOLEAN  (* Read only *)
     END ;
 
   (* Item forms and meaning of fields:
-    mode    r      a       b
+    mode   r      a       b
     --------------------------------
-    Const   -     value (proc adr)  (immediate value)
-    Var     base   off     -               (direct adr)
-    Par      -     off0     off1         (indirect adr)
+    Const  -      value   (proc adr)  (immediate value)
+    Var    base   off     -           (direct adr)
+    Par    -      off0    off1        (indirect adr)
     Reg    regno
-    RegI   regno   off     -
-    Cond  cond   Fchain  Tchain  *)
+    RegI   regno  off     -
+    Cond   cond   Fchain  Tchain
+  *)
 
-  VAR pc*, varsize: INTEGER;   (*program counter, data index*)
-    tdx, strx: INTEGER;
-    entry: INTEGER;   (*main entry point*)
-    RH: INTEGER;  (*available registers R[0] ... R[H-1]*)
-    curSB: INTEGER;  (*current static base in SB*)
-    frame: INTEGER;  (*frame offset changed in SaveRegs and RestoreRegs*)
-    fixorgP, fixorgD, fixorgT: INTEGER;   (*origins of lists of locations to be fixed up by loader*)
-    check: BOOLEAN;  (*emit run-time checks*)
-    version: INTEGER;  (* 0 = RISC-0, 1 = RISC-5 *)
+  VAR
+    pc*:      INTEGER;  (* Program counter *)
+    varsize:  INTEGER;  (* Data index *)
+    tdx:      INTEGER;  (* Type descriptor index *)
+    strx:     INTEGER;  (* String index *)
+    entry:    INTEGER;  (* Main entry point*)
+    RH:       INTEGER;  (* Available registers R[0] ... R[RH-1]. Only 4 on x86. *)
+    curSB:    INTEGER;  (* Current static base in SB (BP on x86) *)
+    frame:    INTEGER;  (* Frame offset changed in SaveRegs and RestoreRegs*)
+    fixorgP:  INTEGER;  (* Origins of lists of procedure locations to be fixed up by Loader *)
+    fixorgD:  INTEGER;  (* Origins of lists of global data locations to be fixed up by Loader *)
+    fixorgT:  INTEGER;  (* Origins of lists of type descriptor locations to be fixed up by Loader *)
+    check:    BOOLEAN;  (* Emit run-time checks *)
 
     relmap: ARRAY 6 OF INTEGER;  (*condition codes for relations*)
-    code: ARRAY maxCode OF INTEGER;
-    data: ARRAY maxTD OF INTEGER;  (*type descriptors*)
-    str: ARRAY maxStrx OF CHAR;
+    code:   ARRAY maxCode OF BYTE;
+    data:   ARRAY maxTD   OF INTEGER;  (*type descriptors*)
+    str:    ARRAY maxStrx OF CHAR;
 
   (* Oberon 2 compatibility *)
   PROCEDURE LSL(x,n: INTEGER): INTEGER;
@@ -1119,5 +1129,11 @@ MODULE ORG; (* NW  18.4.2016 / 17.9.2016  code generator in Oberon-07 for RISC*)
   END Close;
 
 BEGIN
-  relmap[0] := 1; relmap[1] := 9; relmap[2] := 5; relmap[3] := 6; relmap[4] := 14; relmap[5] := 13
+  (* The relation map converts Oberon relation numbers to x86 condition test numbers *)
+  relmap[0] := 1;
+  relmap[1] := 9;
+  relmap[2] := 5;
+  relmap[3] := 6;
+  relmap[4] := 14;
+  relmap[5] := 13
 END ORG.

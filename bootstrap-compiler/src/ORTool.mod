@@ -1,10 +1,6 @@
 MODULE ORTool;  (*NW 18.2.2013*)
   IMPORT SYSTEM, Files, Texts, Oberon, ORB;
 
-  TYPE  (* Oberon2 compatibility *)
-    LONGINT = INTEGER;
-    SET     = SYSTEM.SET32;
-
   VAR W: Texts.Writer;
     Form: INTEGER;  (*result of ReadType*)
     mnemo0, mnemo1: ARRAY 16, 4 OF CHAR;  (*mnemonics*)
@@ -103,7 +99,7 @@ MODULE ORTool;  (*NW 18.2.2013*)
 
 (* ---------------------------------------------------*)
 
-  PROCEDURE WriteReg(r: LONGINT);
+  PROCEDURE WriteReg(r: INTEGER);
   BEGIN Texts.Write(W, " ");
     IF r < 12 THEN Texts.WriteString(W, " R"); Texts.WriteInt(W, r MOD 10H, 1)
     ELSIF r = 12 THEN Texts.WriteString(W, "MT")
@@ -113,8 +109,8 @@ MODULE ORTool;  (*NW 18.2.2013*)
     END
   END WriteReg;
 
-  PROCEDURE opcode(w: LONGINT);
-    VAR k, op, u, a, b, c: LONGINT;
+  PROCEDURE opcode(w: INTEGER);
+    VAR k, op, u, a, b, c: INTEGER;
   BEGIN
       k := w DIV 40000000H MOD 4;
       a := w DIV 1000000H MOD 10H;
