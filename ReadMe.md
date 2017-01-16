@@ -31,14 +31,14 @@ The full Oberon-07 system is then built using the compiler above.
 The result is currently a set of .rsc files containing RISC5 binaries. (Note, RISC5 is the RISC machine designed by Wirth as part of the Oberon project, and not the larger RISC-V open source risc architecture originated at the University of California, Berkeley.)
 
 
-### License
+## License
 
 The subdirectory 'wirth' is a snapshot of Oberon files published by Niklaus Wirth at [https://www.inf.ethz.ch/personal/wirth/](https://www.inf.ethz.ch/personal/wirth/) and is published with this license: [ProjectOberon/license.txt](wirth/ProjectOberon/license.txt).
 
 Additions beyond the content of [https://www.inf.ethz.ch/personal/wirth/](https://www.inf.ethz.ch/personal/wirth/) are copyright (C) 2017 David CW Brown following the same license conditions: see [license.txt](LICENSE.txt).
 
 
-#### Oberon
+## Oberon
 
 Oberon is a programming language, an operating system and a graphical
 user interface. Originally designed and implemented by by Niklaus Wirth and
